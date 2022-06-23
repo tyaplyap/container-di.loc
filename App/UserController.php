@@ -2,7 +2,7 @@
 	
 	namespace App;
 	
-	/** Step 2 - внедряем зависимость через сеттер
+	/** Step 3 - внедряем зависимость через конструктор
 	* Контроллер с единственным методом, который вызывает 
 	* метод репозитария для поиска пользователя
 	*/
@@ -10,13 +10,11 @@
 	{
 		private UserRepository $userRepository;
 		
-		// Явно, из вне, внедрим зависимость от экземпляра 
-		// класса UserRepository через сеттер
-		public function setUserRepository(UserRepository $userRepository): self
+		// Внедряем зависимость через конструктор 
+		// вместо создания вручную через сеттер
+		public function __construct(UserRepository $userRepository)
 		{
 			$this->userRepository = $userRepository;
-			
-			return $this;
 		}
 		
 		public function handle()

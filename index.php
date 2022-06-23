@@ -6,16 +6,15 @@
 		require_once __DIR__ . '/' . str_replace('\\', '/', $className) . '.php';
 	});
 	
-	// $tep 2 - внедряем зависимости через сеттеры.
-	// Теперь мы наглядно видим, какой объект у нас зависит от других объектов 
-	// и от каких именно и управляем этими зависимостями с помощью сеттеров.
+	// $tep 3 - внедряем зависимость через конструктор
+	// Это делаем зависимости обязательными, теперь их 
+	// невозможно забыть передать
 	try{
-		$controller = (new \App\UserController())
-			->setUserRepository(
-				(new \App\UserRepository())
-					->setDb(new \App\Db())
+		$controller = (new \App\UserController(
+			new \App\UserRepository(
+				new \App\Db()
 			)
-		;
+		));
 		echo $controller->handle();
 	} catch(\Exception $e){
 		echo 'Ошибка: ' . $e->getMessage();
