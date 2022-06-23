@@ -2,20 +2,27 @@
 	
 	namespace App;
 	
-	/**
+	/** Step 2 - внедряем зависимость через сеттер
 	* Контроллер с единственным методом, который вызывает 
 	* метод репозитария для поиска пользователя
 	*/
 	class UserController
 	{
+		private UserRepository $userRepository;
+		
+		// Явно, из вне, внедрим зависимость от экземпляра 
+		// класса UserRepository через сеттер
+		public function setUserRepository(UserRepository $userRepository): self
+		{
+			$this->userRepository = $userRepository;
+			
+			return $this;
+		}
+		
 		public function handle()
 		{
-			// Создаем зависимость от UserRepository
-			// прямо в методе, на лету
-			$repo = new UserRepository(); 
-			
 			// Здесь email мы должны получить из $_POST['email'];
-			$user = $repo->findByEmail('zakhar@mail.ru');
+			$user = $this->userRepository->findByEmail('zakhar@mail.ru');
 			
 			if($user === null){
 				throw new \Exception('Пользователь с таким email не найден');
