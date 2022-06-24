@@ -6,15 +6,11 @@
 		require_once __DIR__ . '/' . str_replace('\\', '/', $className) . '.php';
 	});
 	
-	// $tep 3 - внедряем зависимость через конструктор
-	// Это делаем зависимости обязательными, теперь их 
-	// невозможно забыть передать
+	// $tep 4 - получаем все зависимости через контейнер
 	try{
-		$controller = (new \App\UserController(
-			new \App\UserRepository(
-				new \App\Db()
-			)
-		));
+		$controller = (new \App\Container())
+			->get('userController');
+			
 		echo $controller->handle();
 	} catch(\Exception $e){
 		echo 'Ошибка: ' . $e->getMessage();
