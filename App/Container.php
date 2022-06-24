@@ -2,24 +2,21 @@
 	
 	namespace App;
 	
-	/** Step 4 - добавляем в проект контейнер
-	*
-	* Перенtсем логику получения объектов в контейнер.
-	*/
+	/** Step 5 */
 	class Container
 	{
 		private array $objects = [];
 		
 		public function __construct()
 		{
-			// Ключи в этом массиве - строковые ID объектов
+			// Ключи в этом массиве - полные имена классов
 			// Значения - стрелочные функции, строящие нужный объект
 			// Тем самым мы добиваемся "ленивой" инициализации объектов,
 			// они создаются только в тот момент, когда запрашиваются.
 			$this->objects = [
-				'db' => fn() => new Db(),
-				'userRepository' => fn() => new UserRepository($this->get('db')),
-				'userController' => fn() => new UserController($this->get('userRepository'))
+				Db::class => fn() => new Db(),
+				UserRepository::class => fn() => new UserRepository($this->get(Db::class)),
+				UserController::class => fn() => new UserController($this->get(UserRepository::class))
 			];
 		}
 		
@@ -30,7 +27,8 @@
 		
 		public function get(string $id): object // или mixed
 		{
-			// по строковому идентификатору вызываем функцию, создающую объект
+			// по идентификатору (теперь это полное имя класса) 
+			// вызываем функцию, создающую объект
 			return $this->objects[$id]();
 		}
 	}
